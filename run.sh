@@ -1,4 +1,35 @@
 #!/bin/bash
+# ==================================================================
+#  ______                           __     _____
+# /_  __/___  ____ ___  _________ _/ /_   /__  /
+#  / / / __ \/ __ `__ \/ ___/ __ `/ __/     / /
+# / / / /_/ / / / / / / /__/ /_/ / /_      / /
+#/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/
+
+# Multi-instance Apache Tomcat installation with a focus
+# on best-practices as defined by Apache, SpringSource, and MuleSoft
+# and enterprise use with large-scale deployments.
+
+# Credits:
+#       Google -> Couldn't survive without it
+#       Stackoverflow.com -> Community support
+#       SpringSource -> Specifically best-practices and seminars (Expert Series)
+
+# Based On:
+#       http://www.springsource.com/files/uploads/tomcat/tomcatx-performance-tuning.pdf
+#       http://www.springsource.com/files/u1/PerformanceTuningApacheTomcat-Part2.pdf
+#       http://www.springsource.com/files/uploads/tomcat/tomcatx-large-scale-deployments.pdf
+
+# Created By: Terrance A. Snyder
+# URL: http://www.terranceasnyder.com, http://shutupandcode.net
+
+# Best Practice Documentation:
+# http://terranceasnyder.com/2011/05/tomcat-best-practices/
+
+# Looking for the latest version?
+# github @ https://github.com/terrancesnyder
+
+# ==================================================================
 
 # default tomcat version
 TOMCAT_VERSION="apache-tomcat-7.0.14"

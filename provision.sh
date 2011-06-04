@@ -1,26 +1,53 @@
 #!/bin/bash
+# ==================================================================
+#  ______                           __     _____
+# /_  __/___  ____ ___  _________ _/ /_   /__  /
+#  / / / __ \/ __ `__ \/ ___/ __ `/ __/     / /
+# / / / /_/ / / / / / / /__/ /_/ / /_      / /
+#/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/
 
-# Copyright Terrance A. Snyder (http://www.terranceasnyder.com) (http://shutupandcode.net)
-# Based on SpringSource Recommended Best Practices for Multi-Instance Tomcat Installs
-# Questions? terrance.a.snyder@gmail.com
-# Last Updated: 2011-06-04
+# Multi-instance Apache Tomcat installation with a focus
+# on best-practices as defined by Apache, SpringSource, and MuleSoft
+# and enterprise use with large-scale deployments.
 
-# Looking for more scripts for tomcat or the latest version? 
-# Try my github:
-# https://github.com/terrancesnyder
+# Credits:
+#       Google -> Couldn't survive without it
+#       Stackoverflow.com -> Community support
+#       SpringSource -> Specifically best-practices and seminars (Expert Series)
 
-echo ""
-echo "  ______                           __     _____"
-echo " /_  __/___  ____ ___  _________ _/ /_   /__  /"
-echo "  / / / __ \/ __  __ \/ ___/ __  / __/     / / "
-echo " / / / /_/ / / / / / / /__/ /_/ / /_      / /  "
-echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   "
-echo "                                               "
-echo "                                               "
+# Based On:
+#       http://www.springsource.com/files/uploads/tomcat/tomcatx-performance-tuning.pdf
+#       http://www.springsource.com/files/u1/PerformanceTuningApacheTomcat-Part2.pdf
+#       http://www.springsource.com/files/uploads/tomcat/tomcatx-large-scale-deployments.pdf
+
+# Created By: Terrance A. Snyder
+# URL: http://www.terranceasnyder.com, http://shutupandcode.net
+
+# Best Practice Documentation:
+# http://terranceasnyder.com/2011/05/tomcat-best-practices/
+
+# Looking for the latest version?
+# github @ https://github.com/terrancesnyder
+
+# ==================================================================
+
+# Friendly Logo
+logo()
+{
+	echo ""
+	echo "  ______                           __     _____"
+	echo " /_  __/___  ____ ___  _________ _/ /_   /__  /"
+	echo "  / / / __ \/ __  __ \/ ___/ __  / __/     / / "
+	echo " / / / /_/ / / / / / / /__/ /_/ / /_      / /  "
+	echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   "
+	echo "                                               "
+	echo "                                               "
+}
 
 # Help
 usage()
 {
+	logo
 	echo "Script creates or deletes a Tomcat 7 web instance by"
 	echo "provisioning them from the shared/template folder."
 	echo ""
@@ -68,6 +95,7 @@ case $1 in
 			exit 1
 		fi
 
+		logo
 		echo "[Step 1 of 2]: Creating new instance '$CATALINA_BASE'..."
 		cp -R $DIRECTORY/shared/template $DIRECTORY/$HTTP_PORT
 		sleep 2
@@ -86,6 +114,7 @@ case $1 in
 			exit 1
 		fi
 
+		logo
 		echo "Removing tomcat instance '$CATALINA_BASE'"
 		echo -n "Are you sure? [Y/n]: "
 		read -e CONFIRM

@@ -1,18 +1,42 @@
 #! /bin/sh
-# Licensed to the Apache Software Foundation (ASF).
+# ==================================================================
+#  ______                           __     _____
+# /_  __/___  ____ ___  _________ _/ /_   /__  /
+#  / / / __ \/ __ `__ \/ ___/ __ `/ __/     / /
+# / / / /_/ / / / / / / /__/ /_/ / /_      / /
+#/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/
 
-# handles the automatic startup/shutdown
-# of any tomcat instance within the tomcat
-# folder. an instance is based on convention
-# that a folder that hosts the specified instance
-# is named the same as the port number wanted.
+# Multi-instance Apache Tomcat installation with a focus
+# on best-practices as defined by Apache, SpringSource, and MuleSoft
+# and enterprise use with large-scale deployments.
 
-# For example: ./8080; ./8181; ./8282
+# Credits:
+#       Google -> Couldn't survive without it
+#       Stackoverflow.com -> Community support
+#       SpringSource -> Specifically best-practices and seminars (Expert Series)
 
-# Will trigger the following commands to be run:
-# ./run.sh 8080 start
-# ./run.sh 8181 start
-# ./run.sh 8282 start
+# Based On:
+#       http://www.springsource.com/files/uploads/tomcat/tomcatx-performance-tuning.pdf
+#       http://www.springsource.com/files/u1/PerformanceTuningApacheTomcat-Part2.pdf
+#       http://www.springsource.com/files/uploads/tomcat/tomcatx-large-scale-deployments.pdf
+
+# Created By: Terrance A. Snyder
+# URL: http://www.terranceasnyder.com, http://shutupandcode.net
+
+# Best Practice Documentation:
+# http://terranceasnyder.com/2011/05/tomcat-best-practices/
+
+# Looking for the latest version?
+# github @ https://github.com/terrancesnyder
+
+# ==================================================================
+
+# DESCRIPTION
+# Handles the automatic startup/shutdown of any tomcat instance within the tomcat
+# folder. an instance is based on convention that a folder that hosts the specified 
+# instance is named the same as the port number wanted.
+
+# ==================================================================
 
 ACTION="$1"
 
