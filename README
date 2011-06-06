@@ -47,6 +47,12 @@ Installation:
       step 6) /opt/dev/tomcat/provision.sh create 8080           | Create a new instance on 8080
       step 7) Ensure you can access http://<yourhost>:8080/
 
+Create a new Tomcat User:
+      groupadd tomcat
+      useradd -g tomcat -d /opt/dev/tomcat tomcat
+      passwd tomcat
+      chown -R tomcat:tomcat /opt/dev/tomcat
+
 Security Notes: 
 
 JMX remote
@@ -68,4 +74,3 @@ If you execute ./run.sh it will attempt to find the latest version of tomcat and
 tomcat instances available.
 
 Suggestions? terrance.a.snyder@gmail.com
-
