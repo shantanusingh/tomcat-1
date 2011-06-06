@@ -48,20 +48,31 @@ DIRECTORY=`dirname $SCRIPT`
 
 if [ -z  "$1" -o -z "$2" ]; then
   echo "usage: run.sh [start|stop] <configuration>"
-  exit -1
+  exit 1
 fi
 
 if [ `whoami` != "tomcat" ]; then
   echo "error: you are not running under the tomcat user"
-  exit -1
+  exit 1
 fi
 
 SHUTDOWN_PORT=$(($HTTP_PORT+1))
 JMX_PORT=$(($HTTP_PORT+2))
 JPDA_PORT=$(($HTTP_PORT+3))
 
-export JRE_HOME="/opt/dev/java"
-export JAVA_HOME="/opt/dev/java"
+# export JRE_HOME="/opt/dev/java"
+# export JAVA_HOME="/opt/dev/java"
+
+if [ -z "$JAVA_HOME" ]; then
+   echo "error: JAVA_HOME is not set"
+   exit 1
+fi
+
+if [ -z "$JRE_HOME" ]; then
+   echo "error: JRE_HOME is not set"
+   exit 1
+fi
+
 export JPDA_ADDRESS="$JPDA_PORT"
 
 export JPDA_TRANSPORT="dt_socket"

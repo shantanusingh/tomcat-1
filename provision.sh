@@ -101,10 +101,11 @@ case $1 in
 		sleep 2
 
 		echo "[Step 2 of 2]: Starting tomcat instance '$CATALINA_BASE'..."
-		$DIRECTORY/run.sh $HTTP_PORT start > /dev/null 2>&1
+		$DIRECTORY/run.sh start $HTTP_PORT
 		sleep 2
 
-		echo "[Done]: Your tomcat instance is available via http://$IP:$HTTP_PORT/probe..."
+		echo ""
+		echo "[Done]: Your tomcat instance is available via http://$IP:$HTTP_PORT/..."
 
 		exit 0
 	;;
@@ -116,13 +117,13 @@ case $1 in
 
 		logo
 		echo "Removing tomcat instance '$CATALINA_BASE'"
-		echo -n "Are you sure? [Y/n]: "
+		echo -n "Are you sure? [y/N]: "
 		read -e CONFIRM
 
 		case $CONFIRM in
 			[yY]*)
 				echo "Step [1 of 3]: Ensuring instance $HTTP_PORT is shutdown..."
-				$DIRECTORY/run.sh $HTTP_PORT stop > /dev/null 2>&1
+				$DIRECTORY/run.sh stop $HTTP_PORT > /dev/null 2>&1
 				sleep 1
 				echo "Step [2 of 3]: Ensuring no orphaned tomcat instances are running..."
 				ps aux | grep $DIRECTORY/$HTTP_PORT | grep -v grep | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
