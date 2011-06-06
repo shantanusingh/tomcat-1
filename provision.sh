@@ -123,10 +123,10 @@ case $1 in
 			[yY]*)
 				echo "Step [1 of 3]: Ensuring instance $HTTP_PORT is shutdown..."
 				$DIRECTORY/run.sh $HTTP_PORT stop > /dev/null 2>&1
-				sleep 5
+				sleep 1
 				echo "Step [2 of 3]: Ensuring no orphaned tomcat instances are running..."
 				ps aux | grep $DIRECTORY/$HTTP_PORT | grep -v grep | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
-				sleep 2
+				sleep 1
 				echo "Step [3 of 3]: Removing instance from file system..."
 				rm -rf $CATALINA_BASE
 				echo "(done)"

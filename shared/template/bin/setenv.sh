@@ -2,7 +2,7 @@
 
 # discourage address map swapping by setting Xms and Xmx to the same value
 # http://confluence.atlassian.com/display/DOC/Garbage+Collector+Performance+Issues
-export CATALINA_OPTS="$CATALINA_OPTS -Xms512m"
+export CATALINA_OPTS="$CATALINA_OPTS -Xms64m"
 export CATALINA_OPTS="$CATALINA_OPTS -Xmx512m"
 
 # Increase maximum perm size for web base applications to 4x the default amount
@@ -46,6 +46,11 @@ export CATALINA_OPTS="$CATALINA_OPTS -server"
 # Disable remote (distributed) garbage collection by Java clients
 # and remove ability for applications to call explicit GC collection
 export CATALINA_OPTS="$CATALINA_OPTS -XX:+DisableExplicitGC"
+
+# Check for application specific parameters at startup
+if [ -r "$CATALINA_BASE/bin/appenv.sh" ]; then
+  . "$CATALINA_BASE/bin/appenv.sh"
+fi
 
 echo "Using CATALINA_OPTS:"
 for arg in $CATALINA_OPTS

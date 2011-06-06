@@ -38,8 +38,8 @@ TOMCAT_VERSION="apache-tomcat-7.0.14"
 source ~/.bashrc
 
 # user arguments
-HTTP_PORT="$1"
-ACTION="$2"
+ACTION="$1"
+HTTP_PORT="$2"
 IP="$( ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}' )"
 
 # directory
@@ -47,7 +47,7 @@ SCRIPT=$(readlink -f $0)
 DIRECTORY=`dirname $SCRIPT`
 
 if [ -z  "$1" -o -z "$2" ]; then
-  echo "usage: run.sh <configuration> [start|stop]"
+  echo "usage: run.sh [start|stop] <configuration>"
   exit -1
 fi
 
