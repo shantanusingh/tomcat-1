@@ -10,38 +10,43 @@
 # on best-practices as defined by Apache, SpringSource, and MuleSoft
 # and enterprise use with large-scale deployments.
 
-# Credits:
-#       Google -> Couldn't survive without it
-#       Stackoverflow.com -> Community support
-#       SpringSource -> Specifically best-practices and seminars (Expert Series)
-
-# Based On:
-#       http://www.springsource.com/files/uploads/tomcat/tomcatx-performance-tuning.pdf
-#       http://www.springsource.com/files/u1/PerformanceTuningApacheTomcat-Part2.pdf
-#       http://www.springsource.com/files/uploads/tomcat/tomcatx-large-scale-deployments.pdf
-
-# Created By: Terrance A. Snyder
-# URL: http://www.terranceasnyder.com, http://shutupandcode.net
-
-# Best Practice Documentation:
-# http://terranceasnyder.com/2011/05/tomcat-best-practices/
-
-# Looking for the latest version?
-# github @ https://github.com/terrancesnyder
-
-# ==================================================================
-
-# DESCRIPTION
-# Handles the automatic startup/shutdown of any tomcat instance within the tomcat
-# folder. an instance is based on convention that a folder that hosts the specified 
-# instance is named the same as the port number wanted.
-
 # ==================================================================
 
 ACTION="$1"
 
+# Friendly Logo
+logo()
+{
+        echo ""
+        echo "  ______                           __     _____"
+        echo " /_  __/___  ____ ___  _________ _/ /_   /__  /"
+        echo "  / / / __ \/ __  __ \/ ___/ __  / __/     / / "
+        echo " / / / /_/ / / / / / / /__/ /_/ / /_      / /  "
+        echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   "
+        echo "                                               "
+        echo "                                               "
+}
+
+# Help
+usage()
+{
+        logo
+	echo "Handles the automatic startup/shutdown of any tomcat instance within the tomcat"
+	echo "folder. an instance is based on convention that a folder that hosts the specified"
+	echo "instance is named the same as the port number wanted."
+        echo ""
+        echo "usage:"
+        echo "   $0 [stop|start]"
+        echo ""
+        echo "examples:"
+        echo "   $0 start -> Starts ALL tomcat instances currently configured"
+        echo "   $0 stop  -> Stops ALL tomcat instances currently configured"
+        echo ""
+        exit 1
+}
+
 if [ -z  "$1" ]; then
-  echo "usage: server.sh [start|stop]"
+  usage
   exit 0
 fi
 

@@ -10,30 +10,10 @@
 # on best-practices as defined by Apache, SpringSource, and MuleSoft
 # and enterprise use with large-scale deployments.
 
-# Credits:
-#       Google -> Couldn't survive without it
-#       Stackoverflow.com -> Community support
-#       SpringSource -> Specifically best-practices and seminars (Expert Series)
-
-# Based On:
-#       http://www.springsource.com/files/uploads/tomcat/tomcatx-performance-tuning.pdf
-#       http://www.springsource.com/files/u1/PerformanceTuningApacheTomcat-Part2.pdf
-#       http://www.springsource.com/files/uploads/tomcat/tomcatx-large-scale-deployments.pdf
-
-# Created By: Terrance A. Snyder
-# URL: http://www.terranceasnyder.com, http://shutupandcode.net
-
-# Best Practice Documentation:
-# http://terranceasnyder.com/2011/05/tomcat-best-practices/
-
-# Looking for the latest version?
-# github @ https://github.com/terrancesnyder
-
 # ==================================================================
 
 # default tomcat version
 TOMCAT_VERSION="apache-tomcat-7.0.14"
-
 # ensure we always grab the current shell scripts
 source ~/.bashrc
 
@@ -46,22 +26,45 @@ IP="$( ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}' )"
 SCRIPT=$(readlink -f $0)
 DIRECTORY=`dirname $SCRIPT`
 
+# Friendly Logo
+logo()
+{
+	echo ""
+	echo "  ______                           __     _____"
+	echo " /_  __/___  ____ ___  _________ _/ /_   /__  /"
+	echo "  / / / __ \/ __  __ \/ ___/ __  / __/     / / "
+	echo " / / / /_/ / / / / / / /__/ /_/ / /_      / /  "
+	echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   "
+	echo "                                               "
+	echo "                                               "
+}
+
+# Help
+usage()
+{
+	logo
+	echo "Script starts and stops a Tomcat web instance by "
+	echo "invoking the standard $CATALINA_HOME/bin/catalina.sh file."
+	echo ""
+	echo "usage:"
+	echo "   $0 [stop|start] <port>"
+	echo ""
+	echo "examples:"
+	echo "   $0 start 8080 -> Starts the tomcat instance configured for port 8080"
+	echo "   $0 stop 8080  -> Stops the tomcat instance configured for port 8080"
+	echo ""
+	exit 1
+}
+
 if [ -z  "$1" -o -z "$2" ]; then
-  echo "usage: run.sh [start|stop] <configuration>"
-  exit 1
+  usage
+  exit 0
 fi
 
 if [ `whoami` != "tomcat" ]; then
   echo "error: you are not running under the tomcat user"
   exit 1
 fi
-
-SHUTDOWN_PORT=$(($HTTP_PORT+1))
-JMX_PORT=$(($HTTP_PORT+2))
-JPDA_PORT=$(($HTTP_PORT+3))
-
-# export JRE_HOME="/opt/dev/java"
-# export JAVA_HOME="/opt/dev/java"
 
 if [ -z "$JAVA_HOME" ]; then
    echo "error: JAVA_HOME is not set"
@@ -73,8 +76,11 @@ if [ -z "$JRE_HOME" ]; then
    exit 1
 fi
 
-export JPDA_ADDRESS="$JPDA_PORT"
+SHUTDOWN_PORT=$(($HTTP_PORT+1))
+JMX_PORT=$(($HTTP_PORT+2))
+JPDA_PORT=$(($HTTP_PORT+3))
 
+export JPDA_ADDRESS="$JPDA_PORT"
 export JPDA_TRANSPORT="dt_socket"
 export CATALINA_BASE="$DIRECTORY/$HTTP_PORT"
 export CATALINA_HOME="$DIRECTORY/$TOMCAT_VERSION"
@@ -113,19 +119,13 @@ export CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=$IP"
 export JAVA_OPTS="$JAVA_OPTS -Dhttp.port=$HTTP_PORT"
 export JAVA_OPTS="$JAVA_OPTS -Dshutdown.port=$SHUTDOWN_PORT"
 
-echo ""
-echo "  ______                           __     _____"
-echo " /_  __/___  ____ ___  _________ _/ /_   /__  /"
-echo "  / / / __ \/ __  __ \/ ___/ __  / __/     / / "
-echo " / / / /_/ / / / / / / /__/ /_/ / /_      / /  "
-echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   "
-echo "                                               "
-echo "                                               "
-
+# print friendly logo and information useful for debugging
+logo
 echo "IP: $IP | HTTP: $HTTP_PORT | JPDA Port: $JPDA_PORT | JMX Port: $JMX_PORT"
 echo "_______________________________________________"
 echo ""
 
+# start/stop commands directed to the standard catalina out folder
 exec "$CATALINA_HOME/bin/catalina.sh" jpda "$ACTION" -config $CATALINA_CONF
 
 Tomcat
