@@ -13,7 +13,11 @@
 # ==================================================================
 
 # default tomcat version
-TOMCAT_VERSION="apache-tomcat-7.0.14"
+TOMCAT_VERSION=`cat VERSION | sed -n '1p'`
+echo $TOMCAT_VERSION
+TOMCAT_DOWNLOAD=`cat VERSION | sed -n '2p'`
+echo $TOMCAT_DOWNLOAD
+
 # ensure we always grab the current shell scripts
 source ~/.bashrc
 
@@ -91,14 +95,14 @@ export LOGGING_CONFIG="-Djava.util.logging.config.file=$DIRECTORY/shared/logging
 
 # check if tomcat installed if not download it
 if [ ! -d "$DIRECTORY/$TOMCAT_VERSION" ]; then
-	echo "Downloading Apache Tomcat 7.0.14 from Apache..."
-	wget http://www.carfab.com/apachesoftware/tomcat/tomcat-7/v7.0.14/bin/apache-tomcat-7.0.14.zip > /dev/null
+	echo "Downloading $TOMCAT_VERSION from Apache..."
+	wget $TOMCAT_DOWNLOAD > /dev/null
 	echo "Extracting Tomcat..."
-	unzip apache-tomcat-7.0.14.zip
+	unzip $TOMCAT_VERSION.zip
 	echo "Removing downloaded zip..."
-	rm -rf apache-tomcat-7.0.14.zip
+	rm -rf $TOMCAT_VERSION.zip
 	echo "Changing scripts to executable..."
-	chmod +x ./apache-tomcat-7.0.14/bin/*.sh
+	chmod +x ./$TOMCAT_VERSION/bin/*.sh
 fi
 
 if [ ! -d "$CATALINA_BASE" ]; then

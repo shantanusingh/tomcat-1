@@ -83,9 +83,9 @@ case $1 in
 
 		echo "[Step 2 of 2]: Starting tomcat instance '$CATALINA_BASE'..."
 		$DIRECTORY/run.sh start $HTTP_PORT
-		sleep 2
+		sleep 5
 
-		echo ""
+		# echo ""
 		echo "[Done]: Your tomcat instance is available via http://$IP:$HTTP_PORT/..."
 
 		exit 0
