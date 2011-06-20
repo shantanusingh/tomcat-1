@@ -1,76 +1,15 @@
-  ______                           __     _____
- /_  __/___  ____ ___  _________ _/ /_   /__  /
-  / / / __ \/ __ `__ \/ ___/ __ `/ __/     / / 
- / / / /_/ / / / / / / /__/ /_/ / /_      / /  
-/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   
+   ______                           __     _____
+  /_  __/___  ____ ___  _________ _/ /_   /__  /
+   / / / __ \/ __ `__ \/ ___/ __ `/ __/     / / 
+  / / / /_/ / / / / / / /__/ /_/ / /_      / /  
+ /_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   
                                                
 
-Multi-instance Apache Tomcat installation with a focus
-on best-practices as defined by Apache, SpringSource, and MuleSoft
-and enterprise use with large-scale deployments.
+ Multi-instance Apache Tomcat installation with a focus on best-practices as 
+ defined by Apache, SpringSource, and MuleSoft and enterprise use with 
+ large-scale deployments.
 
-Credits:
-Google -> Couldn't survive without it
-Stackoverflow.com -> Community support
-SpringSource -> Specifically best-practices and seminars (Expert Series)
+ Tomcat version: apache-tomcat-7.0.16
 
-Based On:
-http://www.springsource.com/files/uploads/tomcat/tomcatx-performance-tuning.pdf
-http://www.springsource.com/files/u1/PerformanceTuningApacheTomcat-Part2.pdf
-http://www.springsource.com/files/uploads/tomcat/tomcatx-large-scale-deployments.pdf
-
-Created By: Terrance A. Snyder
-URL: http://www.terranceasnyder.com, http://shutupandcode.net
-
-Best Practice Documentation:
-http://terranceasnyder.com/2011/05/tomcat-best-practices/
-
-Looking for the latest version?
-github @ https://github.com/terrancesnyder
-
-Files
-     ./run.sh -> starts, stops tomcat instances
-     ./provision.sh -> creates, deletes new tomcat instances on specific ports
-     ./server.sh -> wrapper script for init.d support that will dynamically add tomcat startup for each provisioned instance
-
-Directories
-     ./apache-tomcat-7.0.14 -> default download of tomcat from apache
-     ./shared -> contains global configuration of tomcat shared between all instances
-     ./shared/template -> contains the template used to provision new instances (default memory, jvm args, tomcat users)
-
-Installation:
-      step 1) Unzip to /opt/dev                                  | You can unzip anywhere you like; but this is where I usually put tomcat
-      step 2) Create new user 'tomcat' on your linux machine     | Best practice to run tomcat inside a user who has no interactive login
-      step 3) sudo chown tomcat:users /opt/dev/tomcat -R         | Ensure tomcat owns everything
-      step 4) sudo chmod 765 /opt/dev/tomcat -R                  | YMMV but tomcat needs at least read/write/execute in this folder, your groups may not
-      step 5) sudo chmod 600 /opt/dev/tomcat/shared/jmx*         | Remote jmx is turned on, edit these files to SECURE YOUR INSTANCE
-      step 6) /opt/dev/tomcat/provision.sh create 8080           | Create a new instance on 8080
-      step 7) Ensure you can access http://<yourhost>:8080/
-
-Create a new Tomcat User:
-      groupadd tomcat
-      useradd -g tomcat -d /opt/dev/tomcat tomcat
-      passwd tomcat
-      chown -R tomcat:tomcat /opt/dev/tomcat
-
-Security Notes: 
-
-JMX remote
-	Connecting to JMX is turned on but there are no users defined.
-	See the /opt/dev/tomcat/shared/jmx* files for examples on how to configure
-	JMX security (giving developers READONLY writes is recommended).
-
-Tomcat Users:
-	tomcat-users.xml is configured with NO users having writes to
-        any management options. If you want to change this change the default found in
-        /opt/dev/tomcat/shared/template/conf/tomcat-users.xml. Clever individuals can
-        also opt to keep tomcat-users.xml in ./shared/tomcat-users.xml so that the entire
-        server is secured by this one file, rather than per-instance.
-
-Wait... Where is tomcat?
-
-Tomcat 7.0.14 will be downloaded automatically, no point distributing what apache already has mirrors for.
-If you execute ./run.sh it will attempt to find the latest version of tomcat and install it if there are no
-tomcat instances available.
-
-Suggestions? terrance.a.snyder@gmail.com
+ If you wish to run a different version of tomcat update your VERSION file
+ with the information for your version of tomcat 7.
