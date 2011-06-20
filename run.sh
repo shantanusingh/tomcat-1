@@ -12,11 +12,13 @@
 
 # ==================================================================
 
+# directory
+SCRIPT=$(readlink -f $0)
+DIRECTORY=`dirname $SCRIPT`
+
 # default tomcat version
-TOMCAT_VERSION=`cat VERSION | sed -n '1p'`
-echo $TOMCAT_VERSION
-TOMCAT_DOWNLOAD=`cat VERSION | sed -n '2p'`
-echo $TOMCAT_DOWNLOAD
+TOMCAT_VERSION=`cat $DIRECTORY/VERSION | sed -n '1p'`
+TOMCAT_DOWNLOAD=`cat $DIRECTORY/VERSION | sed -n '2p'`
 
 # ensure we always grab the current shell scripts
 source ~/.bashrc
@@ -25,10 +27,6 @@ source ~/.bashrc
 ACTION="$1"
 HTTP_PORT="$2"
 IP="$( ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}' )"
-
-# directory
-SCRIPT=$(readlink -f $0)
-DIRECTORY=`dirname $SCRIPT`
 
 # Friendly Logo
 logo()
