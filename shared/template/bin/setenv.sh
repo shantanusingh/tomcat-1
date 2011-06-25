@@ -64,5 +64,10 @@ for arg in $JAVA_OPTS
 do
     echo ">> " $arg
 done
+
+echo ""
+echo "Tomcat Configuration: '$CATALINA_CONF'"
+echo "Tomcat Logging: '$LOGGING_CONFIG'"
+
 echo "_______________________________________________"
 echo ""

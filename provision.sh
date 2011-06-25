@@ -1,28 +1,31 @@
 #!/bin/bash
 # ==================================================================
-#  ______                           __     _____
-# /_  __/___  ____ ___  _________ _/ /_   /__  /
-#  / / / __ \/ __ `__ \/ ___/ __ `/ __/     / /
-# / / / /_/ / / / / / / /__/ /_/ / /_      / /
-#/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/
+#  ______                           __
+# /_  __/___  ____ ___  _________ _/ /_
+#  / / / __ \/ __ `__ \/ ___/ __ `/ __/
+# / / / /_/ / / / / / / /__/ /_/ / /_
+#/_/  \____/_/ /_/ /_/\___/\__,_/\__/
 
 # Multi-instance Apache Tomcat installation with a focus
 # on best-practices as defined by Apache, SpringSource, and MuleSoft
 # and enterprise use with large-scale deployments.
 
 # ==================================================================
+# standard variables
+SCRIPT=$(readlink -f $0)
+DIRECTORY=`dirname $SCRIPT`
 
 # Friendly Logo
 logo()
 {
 	echo ""
-	echo "  ______                           __     _____"
-	echo " /_  __/___  ____ ___  _________ _/ /_   /__  /"
-	echo "  / / / __ \/ __  __ \/ ___/ __  / __/     / / "
-	echo " / / / /_/ / / / / / / /__/ /_/ / /_      / /  "
-	echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   "
-	echo "                                               "
-	echo "                                               "
+	echo "  ______                           __    "
+	echo " /_  __/___  ____ ___  _________ _/ /_   "
+	echo "  / / / __ \/ __  __ \/ ___/ __  / __/   "
+	echo " / / / /_/ / / / / / / /__/ /_/ / /_     "
+	echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     "
+	echo "                                         "
+	echo "                                         "
 }
 
 # Help
@@ -42,6 +45,39 @@ usage()
 	exit 1
 }
 
+# Download and install Tomcat
+choose_tomcat_version() 
+{
+	cat VERSION | awk 'NR % 1 == 0' | awk '{ print "   " $1 " " $2 }'
+	echo "What version of tomcat would you like to provision:"
+	read -e CHOICE
+	TOMCAT_VERSION=`cat $DIRECTORY/VERSION | grep ^$CHOICE | grep -oE apache.+`
+
+	if [ -z $TOMCAT_VERSION ]; then
+		echo "ERROR: Unable to identify the tomcat version you have selected, '$CHOICE' is not an option to choose from."
+		exit 0
+	fi
+
+	echo "using '$TOMCAT_VERSION'..."
+
+	export TOMCAT_VERSION="$TOMCAT_VERSION"
+	if [ ! -d "$DIR/$TOMCAT_VERSION" ]; then
+		wget https://github.com/downloads/terrancesnyder/tomcat/$TOMCAT_VERSION.zip --no-check-certificate --connect-timeout=10 --dns-timeout=5 -O $DIRECTORY/$TOMCAT_VERSION.zip
+		RESULT=$?
+		if [ ! $RESULT -eq 0 ]; then
+			echo "Failed to download tomcat at https://github.com/downloads/terrancesnyder/tomcat/$TOMCAT_VERSION.zip"
+			exit 0
+		fi
+
+		echo "Extracting Tomcat..."
+		unzip $DIRECTORY/$TOMCAT_VERSION.zip
+		echo "Removing downloaded zip..."
+		rm -rf $DIRECTORY/$TOMCAT_VERSION.zip
+		echo "Changing scripts to executable..."
+		chmod +x $DIRECTORY/$TOMCAT_VERSION/bin/*.sh
+	fi
+}
+
 # Ensure running as tomcat
 if [ `whoami` != "tomcat" ]; then
 	echo "error: you must be running as tomcat user"
@@ -59,12 +95,8 @@ if [ -z  "$1" -o -z "$2" ]; then
 	exit 1
 fi
 
-IP="$( ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}' )"
+IP=`ip addr show | grep 'global eth0' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
 HTTP_PORT=$2
-
-# standard variables
-SCRIPT=$(readlink -f $0)
-DIRECTORY=`dirname $SCRIPT`
 
 # ask for tomcat version
 export CATALINA_BASE="$DIRECTORY/$HTTP_PORT"
@@ -77,15 +109,20 @@ case $1 in
 		fi
 
 		logo
+
+		choose_tomcat_version
+
 		echo "[Step 1 of 2]: Creating new instance '$CATALINA_BASE'..."
 		cp -R $DIRECTORY/shared/template $DIRECTORY/$HTTP_PORT
 		sleep 2
 
-		echo "[Step 2 of 2]: Starting tomcat instance '$CATALINA_BASE'..."
+		echo "[Step 2 of 3]: Setting Tomcat version to $TOMCAT_VERSION..."
+		echo "$TOMCAT_VERSION" > $DIRECTORY/$HTTP_PORT/VERSION
+
+		echo "[Step 3 of 3]: Starting tomcat instance '$CATALINA_BASE'..."
 		$DIRECTORY/run.sh start $HTTP_PORT
 		sleep 5
 
-		# echo ""
 		echo "[Done]: Your tomcat instance is available via http://$IP:$HTTP_PORT/..."
 
 		exit 0

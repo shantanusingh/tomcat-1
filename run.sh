@@ -1,10 +1,10 @@
 #!/bin/bash
 # ==================================================================
-#  ______                           __     _____
-# /_  __/___  ____ ___  _________ _/ /_   /__  /
-#  / / / __ \/ __ `__ \/ ___/ __ `/ __/     / /
-# / / / /_/ / / / / / / /__/ /_/ / /_      / /
-#/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/
+#   ______                           __
+#  /_  __/___  ____ ___  _________ _/ /_
+#   / / / __ \/ __ `__ \/ ___/ __ `/ __/
+#  / / / /_/ / / / / / / /__/ /_/ / /_
+# /_/  \____/_/ /_/ /_/\___/\__,_/\__/
 
 # Multi-instance Apache Tomcat installation with a focus
 # on best-practices as defined by Apache, SpringSource, and MuleSoft
@@ -16,29 +16,22 @@
 SCRIPT=$(readlink -f $0)
 DIRECTORY=`dirname $SCRIPT`
 
-# default tomcat version
-TOMCAT_VERSION=`cat $DIRECTORY/VERSION | sed -n '1p'`
-TOMCAT_DOWNLOAD=`cat $DIRECTORY/VERSION | sed -n '2p'`
-
-# ensure we always grab the current shell scripts
-source ~/.bashrc
-
 # user arguments
 ACTION="$1"
 HTTP_PORT="$2"
-IP="$( ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}' )"
+IP=`ip addr show | grep 'global eth0' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
 
 # Friendly Logo
 logo()
 {
 	echo ""
-	echo "  ______                           __     _____"
-	echo " /_  __/___  ____ ___  _________ _/ /_   /__  /"
-	echo "  / / / __ \/ __  __ \/ ___/ __  / __/     / / "
-	echo " / / / /_/ / / / / / / /__/ /_/ / /_      / /  "
-	echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     /_/   "
-	echo "                                               "
-	echo "                                               "
+	echo "  ______                           __    "
+	echo " /_  __/___  ____ ___  _________ _/ /_   "
+	echo "  / / / __ \/ __  __ \/ ___/ __  / __/   "
+	echo " / / / /_/ / / / / / / /__/ /_/ / /_     "
+	echo "/_/  \____/_/ /_/ /_/\___/\__,_/\__/     "
+	echo "                                         "
+	echo "                                         "
 }
 
 # Help
@@ -82,26 +75,19 @@ SHUTDOWN_PORT=$(($HTTP_PORT+1))
 JMX_PORT=$(($HTTP_PORT+2))
 JPDA_PORT=$(($HTTP_PORT+3))
 
+# grab tomcat version from provisioned directory
+TOMCAT_VERSION=`cat $DIRECTORY/$HTTP_PORT/VERSION | sed -n '1p'`
+# get tomcat major version number
+TOMCAT_MAJOR_VERSION=`cat $DIRECTORY/$HTTP_PORT/VERSION | sed -n '1p' | grep -oE apache\-tomcat\-[0-9] | grep -oE [0-9]`
+
 export JPDA_ADDRESS="$JPDA_PORT"
 export JPDA_TRANSPORT="dt_socket"
 export CATALINA_BASE="$DIRECTORY/$HTTP_PORT"
 export CATALINA_HOME="$DIRECTORY/$TOMCAT_VERSION"
-export CATALINA_CONF="$DIRECTORY/shared/server.xml"
+export CATALINA_CONF="$DIRECTORY/shared/tc$TOMCAT_MAJOR_VERSION/server.xml"
 export CATALINA_PID="$CATALINA_BASE/logs/catalina.pid"
 
-export LOGGING_CONFIG="-Djava.util.logging.config.file=$DIRECTORY/shared/logging.properties"
-
-# check if tomcat installed if not download it
-if [ ! -d "$DIRECTORY/$TOMCAT_VERSION" ]; then
-	echo "Downloading $TOMCAT_VERSION from Apache..."
-	wget $TOMCAT_DOWNLOAD > /dev/null
-	echo "Extracting Tomcat..."
-	unzip $TOMCAT_VERSION.zip
-	echo "Removing downloaded zip..."
-	rm -rf $TOMCAT_VERSION.zip
-	echo "Changing scripts to executable..."
-	chmod +x ./$TOMCAT_VERSION/bin/*.sh
-fi
+export LOGGING_CONFIG="-Djava.util.logging.config.file=$DIRECTORY/shared/tc$TOMCAT_MAJOR_VERSION/logging.properties"
 
 if [ ! -d "$CATALINA_BASE" ]; then
   echo "error: the configured folder does not exist '$CATALINA_BASE'"
@@ -113,8 +99,8 @@ export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=$JMX_PORT"
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.ssl=false"
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
-export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.access.file=$DIRECTORY/shared/jmxremote.access"
-export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.password.file=$DIRECTORY/shared/jmxremote.password"
+#export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.access.file=$DIRECTORY/shared/jmxremote.access"
+#export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.password.file=$DIRECTORY/shared/jmxremote.password"
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=$IP"
 
 # java opts are primary and we need these to define the http ports
