@@ -19,7 +19,7 @@ DIRECTORY=`dirname $SCRIPT`
 # user arguments
 ACTION="$1"
 HTTP_PORT="$2"
-IP=`ip addr show | grep 'global eth0' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+IP=`ip addr show | grep 'global eth[0-9]' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
 
 # Friendly Logo
 logo()

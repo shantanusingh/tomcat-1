@@ -95,7 +95,7 @@ if [ -z  "$1" -o -z "$2" ]; then
 	exit 1
 fi
 
-IP=`ip addr show | grep 'global eth0' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+IP=`ip addr show | grep 'global eth[0-9]' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
 HTTP_PORT=$2
 
 # ask for tomcat version
