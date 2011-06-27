@@ -48,8 +48,10 @@ usage()
 # Download and install Tomcat
 choose_tomcat_version() 
 {
-	cat VERSION | awk 'NR % 1 == 0' | awk '{ print "   " $1 " " $2 }'
+	echo ""
 	echo "What version of tomcat would you like to provision:"
+	cat VERSION | awk 'NR % 1 == 0' | awk '{ print "Enter [" $1 "] for " $2 }'
+	echo -n "Enter your choice: "
 	read -e CHOICE
 	TOMCAT_VERSION=`cat $DIRECTORY/VERSION | grep ^$CHOICE | grep -oE apache.+`
 
