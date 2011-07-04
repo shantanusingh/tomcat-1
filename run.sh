@@ -98,14 +98,19 @@ fi
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=$JMX_PORT"
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.ssl=false"
-export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
-#export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.access.file=$DIRECTORY/shared/jmxremote.access"
-#export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.password.file=$DIRECTORY/shared/jmxremote.password"
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=$IP"
+export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
+
+# uncomment the below in production to protect access to JMX
+# export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.access.file=$DIRECTORY/shared/jmxremote.access"
+# export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.password.file=$DIRECTORY/shared/jmxremote.password"
 
 # java opts are primary and we need these to define the http ports
 export JAVA_OPTS="$JAVA_OPTS -Dhttp.port=$HTTP_PORT"
 export JAVA_OPTS="$JAVA_OPTS -Dshutdown.port=$SHUTDOWN_PORT"
+
+# avoid problem we secure ID generation taking a long time
+export JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
 
 # print friendly logo and information useful for debugging
 logo
