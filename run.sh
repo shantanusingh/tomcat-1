@@ -114,12 +114,13 @@ export JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
 
 # print friendly logo and information useful for debugging
 logo
+
 echo "IP: $IP | HTTP: $HTTP_PORT | JPDA Port: $JPDA_PORT | JMX Port: $JMX_PORT"
 echo "_______________________________________________"
 echo ""
 
 # start/stop commands directed to the standard catalina out folder
-exec "$CATALINA_HOME/bin/catalina.sh" jpda "$ACTION" -config $CATALINA_CONF
+exec "$CATALINA_HOME/bin/catalina.sh" "$ACTION" -config $CATALINA_CONF
 
 Tomcat
 
