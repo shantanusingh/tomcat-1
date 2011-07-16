@@ -28,6 +28,17 @@
 -->
   <role rolename="tomcat"/>
   <role rolename="manager-gui"/>
-  <user username="tomcat" password="tomcat" roles="tomcat,manager-gui"/>
+  <role rolename="manager"/>
+
+  <role rolename="probeuser" />
+  <role rolename="poweruserplus" />
+  <role rolename="poweruser" />
+
+  <user username="manager" password="tomcat" roles="tomcat,manager-gui,manager"/>
+
+  <user username="probeuser" password="tomcat" roles="probeuser"/>
+  <user username="poweruser" password="tomcat" roles="poweruser"/>
+  <user username="poweruserplus" password="tomcat" roles="poweruserplus"/>
+
 </tomcat-users>
 
