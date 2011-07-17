@@ -3,4 +3,4 @@
 export CATLAINA_OPTS="$CATALINA_OPTS -Denv=SANDBOX"
 
 # example of setting SOLR home for entire server
-export JAVA_OPTS="$JAVA_OPTS -Dsolr.data.dir=/opt/index"
+export JAVA_OPTS="$JAVA_OPTS -Dsolr.solr.home=/opt/index"

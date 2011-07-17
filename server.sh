@@ -60,6 +60,6 @@ ports=$(ls -p $DIRECTORY | awk -F'[_/]' '/^[0-9]/ {print $1}')
 # issue action against those ports
 for port in $ports
 do
-	$DIRECTORY/run.sh $port "$ACTION" > /dev/null 2>&1
+	$DIRECTORY/run.sh "$ACTION" $port
 done
 

@@ -121,7 +121,7 @@ export JAVA_OPTS="$JAVA_OPTS -Dshutdown.port=$SHUTDOWN_PORT"
 export JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
 
 # endorsed folder
-export JAVA_ENDORSED_DIRS="$JAVA_ENDORSED_DIRS;$DIRECTORY/shared/endorsed"
+export JAVA_ENDORSED_DIRS="$DIRECTORY/shared/endorsed"
 
 # print friendly logo and information useful for debugging
 logo
