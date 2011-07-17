@@ -94,6 +94,14 @@ if [ ! -d "$CATALINA_BASE" ]; then
   exit -1
 fi
 
+# check for additional options supplied (just like tomcat)
+# for server level configuration options applied to all
+# containers
+if [ -r "$DIRECTORY/setenv.sh" ]; then
+  . "$DIRECTORY/setenv.sh"
+fi
+
+
 # default jmx options - secured by default
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=$JMX_PORT"
@@ -111,6 +119,9 @@ export JAVA_OPTS="$JAVA_OPTS -Dshutdown.port=$SHUTDOWN_PORT"
 
 # avoid problem we secure ID generation taking a long time
 export JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
+
+# endorsed folder
+export JAVA_ENDORSED_DIRS="$JAVA_ENDORSED_DIRS;$DIRECTORY/shared/endorsed"
 
 # print friendly logo and information useful for debugging
 logo
