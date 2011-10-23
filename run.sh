@@ -13,13 +13,21 @@
 # ==================================================================
 
 # directory
-SCRIPT=$(readlink -f $0)
+SCRIPT=`perl -e 'use Cwd "abs_path";print abs_path(shift)' $0`
 DIRECTORY=`dirname $SCRIPT`
 
 # user arguments
 ACTION="$1"
 HTTP_PORT="$2"
-IP=`ip addr show | grep 'global eth[0-9]' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+
+# IP ADDRESS OF CURRENT MACHINE
+if hash ip 2>&-
+then
+	IP=`ip addr show | grep 'global eth[0-9]' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+else
+	IP=`ifconfig | grep 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+.*broadcast' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+fi
+
 
 # Friendly Logo
 logo()
@@ -56,20 +64,20 @@ if [ -z  "$1" -o -z "$2" ]; then
   exit 0
 fi
 
-if [ `whoami` != "tomcat" ]; then
-  echo "error: you are not running under the tomcat user"
-  exit 1
-fi
+#if [ `whoami` != "tomcat" ]; then
+#  echo "error: you are not running under the tomcat user"
+#  exit 1
+#fi
 
 if [ -z "$JAVA_HOME" ]; then
    echo "error: JAVA_HOME is not set"
    exit 1
 fi
 
-if [ -z "$JRE_HOME" ]; then
-   echo "error: JRE_HOME is not set"
-   exit 1
-fi
+#if [ -z "$JRE_HOME" ]; then
+#   echo "error: JRE_HOME is not set"
+#   exit 1
+#fi
 
 SHUTDOWN_PORT=$(($HTTP_PORT+1))
 JMX_PORT=$(($HTTP_PORT+2))

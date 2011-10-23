@@ -12,7 +12,7 @@
 
 # ==================================================================
 # standard variables
-SCRIPT=$(readlink -f $0)
+SCRIPT=`perl -e 'use Cwd "abs_path";print abs_path(shift)' $0`
 DIRECTORY=`dirname $SCRIPT`
 
 # Friendly Logo
@@ -63,8 +63,8 @@ choose_tomcat_version()
 	echo "using '$TOMCAT_VERSION'..."
 
 	export TOMCAT_VERSION="$TOMCAT_VERSION"
-	if [ ! -d "$DIR/$TOMCAT_VERSION" ]; then
-		wget https://github.com/downloads/terrancesnyder/tomcat/$TOMCAT_VERSION.zip --no-check-certificate --connect-timeout=10 --dns-timeout=5 -O $DIRECTORY/$TOMCAT_VERSION.zip
+	if [ ! -d "$DIRECTORY/$TOMCAT_VERSION" ]; then
+		curl -L "https://github.com/downloads/terrancesnyder/tomcat/$TOMCAT_VERSION.zip" -o "$DIRECTORY/$TOMCAT_VERSION.zip"
 		RESULT=$?
 		if [ ! $RESULT -eq 0 ]; then
 			echo "Failed to download tomcat at https://github.com/downloads/terrancesnyder/tomcat/$TOMCAT_VERSION.zip"
@@ -81,10 +81,10 @@ choose_tomcat_version()
 }
 
 # Ensure running as tomcat
-if [ `whoami` != "tomcat" ]; then
-	echo "error: you must be running as tomcat user"
-	exit 0
-fi
+#if [ `whoami` != "tomcat" ]; then
+#	echo "error: you must be running as tomcat user"
+#	exit 0
+#fi
 
 # Main
 # if no arguments passed in
@@ -97,8 +97,14 @@ if [ -z  "$1" -o -z "$2" ]; then
 	exit 1
 fi
 
-IP=`ip addr show | grep 'global eth[0-9]' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+# IP ADDRESS OF CURRENT MACHINE
 HTTP_PORT=$2
+if hash ip 2>&-
+then
+	IP=`ip addr show | grep 'global eth[0-9]' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+else
+	IP=`ifconfig | grep 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+.*broadcast' | grep -o 'inet [0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' | grep -o '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'`
+fi
 
 # ask for tomcat version
 export CATALINA_BASE="$DIRECTORY/$HTTP_PORT"
