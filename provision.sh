@@ -126,7 +126,8 @@ choose_tomcat_version()
   export CURRENT_TOMCAT_VERSION_NUMBER=`echo "$CURRENT_TOMCAT_VERSION" | egrep -o 'apache-tomcat-[[:digit:]]{1}' | egrep -o '[[:digit:]]{1}'`
 
   # Get latest version for $MAJOR version number (7,6,8?) and compare that version number to one applied to port
-  export LATEST_TOMCAT_VERSION=`curl -L "https://s3.amazonaws.com/repo.tomcat.apache.org/$CURRENT_TOMCAT_VERSION_NUMBER/RELEASE" -o "$DIRECTORY/tmp.txt" | cat $DIRECTORY/tmp.txt`
+  curl -L "https://s3.amazonaws.com/repo.tomcat.apache.org/$CURRENT_TOMCAT_VERSION_NUMBER/RELEASE" -o "$DIRECTORY/tmp.txt"
+  export LATEST_TOMCAT_VERSION=`cat $DIRECTORY/tmp.txt`
   export LATEST_TOMCAT_MAJOR_VERSION_NUMBER=`echo "$LATEST_TOMCAT_VERSION" | egrep -o 'apache-tomcat-[[:digit:]]{1}' | egrep -o '[[:digit:]]{1}'`
 
   echo "Latest Version of Tomcat: $LATEST_TOMCAT_VERSION ($LATEST_TOMCAT_MAJOR_VERSION_NUMBER) vs. $CURRENT_TOMCAT_VERSION ($CURRENT_TOMCAT_VERSION_NUMBER)"
@@ -153,7 +154,7 @@ choose_tomcat_version()
   echo "[Step 1 of 2]: Creating new instance '$CATALINA_BASE'..."
   cp -R $DIRECTORY/shared/template $DIRECTORY/$HTTP_PORT
 
-  echo "[Step 2 of 2]: Setting Tomcat version to $TOMCAT_VERSION..."
+  echo "[Step 2 of 2]: Setting Tomcat version to $LATEST_TOMCAT_VERSION..."
   echo "$LATEST_TOMCAT_VERSION" > $DIRECTORY/$HTTP_PORT/VERSION
 
   echo "[Done]: Your tomcat instance can now be started via '$DIRECTORY/run.sh start $HTTP_PORT'..."
