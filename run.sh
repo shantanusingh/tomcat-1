@@ -169,6 +169,7 @@ case $1 in
   restart)
     PID=$(pgrep -f "\-Dhttp.port=$HTTP_PORT")
     kill -9 $PID > /dev/null 2>&1
+    rm $CATALINA_PID
     sleep 1
     exec "$CATALINA_HOME/bin/catalina.sh" start -config $CATALINA_CONF
     ;;
