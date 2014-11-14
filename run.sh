@@ -147,7 +147,7 @@ case $1 in
   ;;
   status)
     # check process is running
-    PID=`echo $(pgrep -f '\-Dhttp.port=' | grep -v '$HTTP_PORT')`
+    PID=$(pgrep -f "\-Dhttp.port=$HTTP_PORT")
     if [ -z "$PID" ]; then
       exit 1
     fi
@@ -160,13 +160,14 @@ case $1 in
     exit 0
   ;;
   stop)
-    PID=`echo $(pgrep -f '\-Dhttp.port=' | grep -v '$HTTP_PORT')`
+    PID=$(pgrep -f "\-Dhttp.port=$HTTP_PORT")
     # can't rely on tomcat to stop... we force it down
     kill -9 $PID > /dev/null 2>&1
+    rm $CATALINA_PID
     exit 0
     ;;
   restart)
-    PID=`echo $(pgrep -f '\-Dhttp.port=' | grep -v '$HTTP_PORT')`
+    PID=$(pgrep -f "\-Dhttp.port=$HTTP_PORT")
     kill -9 $PID > /dev/null 2>&1
     sleep 1
     exec "$CATALINA_HOME/bin/catalina.sh" start -config $CATALINA_CONF
