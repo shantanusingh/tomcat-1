@@ -17,6 +17,7 @@ DIRECTORY=`dirname $SCRIPT`
 
 ACTION=$1
 HTTP_PORT=$2
+TC_VERSION=$3
 export CATALINA_BASE="$DIRECTORY/$HTTP_PORT"
 
 # IP ADDRESS OF CURRENT MACHINE
@@ -109,12 +110,12 @@ check_tomcat_version_is_latest() {
 # Download and install Tomcat
 choose_tomcat_version()
 {
-  echo ""
-  echo "What version of tomcat would you like to provision:"
-  cat VERSION | awk 'NR % 1 == 0' | awk '{ print "Enter [" $1 "] for " $2 }'
-  echo -n "Enter your choice: "
-  read -e CHOICE
-  export CURRENT_TOMCAT_VERSION=`cat $DIRECTORY/VERSION | grep ^$CHOICE | grep -oE apache.+`
+  #echo ""
+  #echo "What version of tomcat would you like to provision:"
+  #cat VERSION | awk 'NR % 1 == 0' | awk '{ print "Enter [" $1 "] for " $2 }'
+  #echo -n "Enter your choice: "
+  #read -e CHOICE
+  export CURRENT_TOMCAT_VERSION=`cat $DIRECTORY/$TC_VERSION | grep ^$CHOICE | grep -oE apache.+`
 
   if [ -z $CURRENT_TOMCAT_VERSION ]; then
     echo "ERROR: Unable to identify the tomcat version you have selected, '$CHOICE' is not an option to choose from."
@@ -155,7 +156,7 @@ choose_tomcat_version()
   cp -R $DIRECTORY/shared/template $DIRECTORY/$HTTP_PORT
 
   echo "[Step 2 of 2]: Setting Tomcat version to $LATEST_TOMCAT_VERSION..."
-  echo "$LATEST_TOMCAT_VERSION" > $DIRECTORY/$HTTP_PORT/VERSION
+  echo "$LATEST_TOMCAT_VERSION" > $DIRECTORY/$HTTP_PORT/$TC_VERSION
 
   echo "[Done]: Your tomcat instance can now be started via '$DIRECTORY/run.sh start $HTTP_PORT'..."
 }
